@@ -480,8 +480,16 @@ export class YuStreamBridgeServer {
 
       forwardHeaders['Access-Control-Allow-Origin'] = '*';
       forwardHeaders['Access-Control-Allow-Headers'] = '*';
+      forwardHeaders['Accept-Ranges'] = 'bytes';
 
       clientRes.writeHead(upstreamRes.statusCode, forwardHeaders);
+
+      if (clientReq.method === 'HEAD') {
+        upstreamRes.destroy();
+        clientRes.end();
+        return resolve();
+      }
+
       upstreamRes.pipe(clientRes);
 
       upstreamRes.on('end', () => resolve());
