@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sl">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8" />
@@ -18,15 +18,15 @@
       <div class="logo-area">
         <div>
           <h1>JellyYuStream</h1>
-          <span class="subtitle">Multi-Job Sync Engine & Stream Bridge za Jellyfin</span>
+          <span class="subtitle">Multi-Job Sync Engine & Stream Bridge for Jellyfin</span>
         </div>
       </div>
       <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-        <span class="live-tag" id="sync-running-tag" style="display:none; margin-right: 0.4rem;">SINHRONIZACIJA...</span>
-        <button type="button" class="btn btn-outline btn-sm" id="btn-open-sync-logs">📜 Dnevniki (Sync)</button>
-        <button type="button" class="btn btn-outline btn-sm" id="btn-open-bridge-logs">⚡ Pretočni most</button>
-        <button type="button" class="btn btn-outline btn-sm" id="btn-open-history">📅 Zgodovina</button>
-        <button type="button" class="btn btn-secondary btn-sm" id="toggle-settings-btn">⚙️ Nastavitve</button>
+        <span class="live-tag" id="sync-running-tag" style="display:none; margin-right: 0.4rem;">SYNCING...</span>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-open-sync-logs">📜 Sync Logs</button>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-open-bridge-logs">⚡ Stream Bridge</button>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-open-history">📅 History</button>
+        <button type="button" class="btn btn-secondary btn-sm" id="toggle-settings-btn">⚙️ Settings</button>
       </div>
     </header>
 
@@ -35,8 +35,8 @@
       <div class="modal-content" style="max-width: 800px; width: 95%;">
         <div class="modal-header">
           <div>
-            <h3>🔐 YuStream & Jellyfin Integracija</h3>
-            <span class="subtitle">YuStream prijavni podatki, pretočni most in Jellyfin osveževanje knjižnice.</span>
+            <h3>🔐 YuStream & Jellyfin Integration</h3>
+            <span class="subtitle">YuStream credentials, stream bridge and Jellyfin library auto-refresh.</span>
           </div>
           <button type="button" class="modal-close-btn" id="close-settings-btn">&times;</button>
         </div>
@@ -45,22 +45,22 @@
           <div class="modal-body">
             <div class="form-row">
               <div class="form-group">
-                <label for="username">Uporabniško ime / Email</label>
+                <label for="username">Username / Email</label>
                 <input type="text" id="username" name="username" required autocomplete="username"
                   placeholder="dematjasic" />
               </div>
               <div class="form-group">
-                <label for="password">Geslo</label>
+                <label for="password">Password</label>
                 <input type="password" id="password" name="password" required autocomplete="current-password"
                   placeholder="••••••••" />
               </div>
               <div class="form-group">
-                <label for="bridgeUrl">Bridge URL v .strm datotekah</label>
+                <label for="bridgeUrl">Bridge URL in .strm files</label>
                 <input type="text" id="bridgeUrl" name="bridgeUrl" required
-                  placeholder="http://localhost:3850 ali http://192.168.1.100:3850" />
+                  placeholder="http://localhost:3850 or http://192.168.1.100:3850" />
               </div>
               <div class="form-group">
-                <label for="port">Vrata (Port)</label>
+                <label for="port">Port</label>
                 <input type="number" id="port" name="port" required value="3850" />
               </div>
             </div>
@@ -72,8 +72,8 @@
                 <div>
                   <div style="font-weight: 600; color: #38bdf8;">⚡ Direct YuStream URLs in .strm files</div>
                   <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">
-                    V .strm datoteke shrani neposredne povezave do video datotek (yustream.org) namesto internega proxy/bridge URL-ja.
-                    Omogoča nemoteno predvajanje na telefonih/tablicah zunaj lokalnega omrežja brez odpiranja portov na routerju.
+                    Stores direct links to video files (yustream.org) in .strm files instead of using internal proxy/bridge URLs.
+                    Enables smooth playback on mobile devices outside the local network without port forwarding.
                   </div>
                 </div>
               </label>
@@ -89,22 +89,22 @@
                 </div>
                 <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; cursor: pointer;">
                   <input type="checkbox" id="jellyfinAutoRefresh" name="jellyfinAutoRefresh" checked />
-                  <span>Samodejno osveži Jellyfin knjižnico po sinhronizaciji</span>
+                  <span>Automatically refresh Jellyfin library after sync</span>
                 </label>
               </div>
               <div class="form-row">
                 <div class="form-group" style="grid-column: span 2;">
-                  <label for="jellyfinUrl">Jellyfin Strežnik URL</label>
+                  <label for="jellyfinUrl">Jellyfin Server URL</label>
                   <input type="text" id="jellyfinUrl" name="jellyfinUrl"
-                    placeholder="http://jellyfin:8096 ali http://192.168.1.100:8096" />
+                    placeholder="http://jellyfin:8096 or http://192.168.1.100:8096" />
                 </div>
                 <div class="form-group" style="grid-column: span 2;">
-                  <label for="jellyfinApiKey">Jellyfin API Ključ (Nadzorna plošča &rarr; API ključi)</label>
-                  <input type="text" id="jellyfinApiKey" name="jellyfinApiKey" placeholder="npr. 48f93a1c..." />
+                  <label for="jellyfinApiKey">Jellyfin API Key (Dashboard &rarr; API Keys)</label>
+                  <input type="text" id="jellyfinApiKey" name="jellyfinApiKey" placeholder="e.g. 48f93a1c..." />
                 </div>
               </div>
               <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
-                <button type="button" class="btn btn-outline btn-sm" id="test-jellyfin-btn">🔗 Testiraj povezavo z Jellyfinom</button>
+                <button type="button" class="btn btn-outline btn-sm" id="test-jellyfin-btn">🔗 Test Jellyfin Connection</button>
               </div>
             </div>
 
@@ -113,19 +113,19 @@
               <!-- Subtitle Mass Conversion Tool -->
               <div style="padding: 0.85rem 1rem; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
                 <div>
-                  <strong style="color: #fcd34d; font-size: 0.875rem;">Pretvorba podnapisov (VTT -> SRT)</strong>
-                  <p style="color: #94a3b8; font-size: 0.775rem; margin-top: 0.15rem;">Preglej vse mape in pretvori morebitne .vtt podnapise v standardni .srt format.</p>
+                  <strong style="color: #fcd34d; font-size: 0.875rem;">Subtitle Conversion (VTT -> SRT)</strong>
+                  <p style="color: #94a3b8; font-size: 0.775rem; margin-top: 0.15rem;">Scan all directories and convert any .vtt subtitles to standard .srt format.</p>
                 </div>
-                <button type="button" class="btn btn-warning btn-sm" id="mass-convert-subtitles-btn">🔄 Pretvori vse VTT v SRT</button>
+                <button type="button" class="btn btn-warning btn-sm" id="mass-convert-subtitles-btn">🔄 Convert All VTT to SRT</button>
               </div>
             </div>
           </div>
 
           <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
-            <button type="button" class="btn btn-outline btn-sm" id="test-auth-btn">🔐 Testiraj YuStream prijavo</button>
+            <button type="button" class="btn btn-outline btn-sm" id="test-auth-btn">🔐 Test YuStream Login</button>
             <div style="display: flex; gap: 0.5rem;">
-              <button type="button" class="btn btn-secondary" id="cancel-settings-btn">Zapri</button>
-              <button type="submit" class="btn btn-primary" id="save-settings-btn">💾 Shrani nastavitve</button>
+              <button type="button" class="btn btn-secondary" id="cancel-settings-btn">Close</button>
+              <button type="submit" class="btn btn-primary" id="save-settings-btn">💾 Save Settings</button>
             </div>
           </div>
         </form>
@@ -139,9 +139,9 @@
         <section class="card">
           <div class="card-header">
             <div>
-              <h2>📋 Sinhronizacijska opravila (Jobs)</h2>
+              <h2>📋 Sync Jobs</h2>
             </div>
-            <button type="button" class="btn btn-success btn-sm" id="create-job-btn">➕ Novo opravilo</button>
+            <button type="button" class="btn btn-success btn-sm" id="create-job-btn">➕ New Job</button>
           </div>
 
           <div class="jobs-grid" id="jobs-grid-container">
@@ -155,15 +155,15 @@
         <section class="card explorer-card">
           <div class="card-header">
             <div>
-              <h2>📁 Raziskovalec datotek</h2>
+              <h2>📁 File Explorer</h2>
             </div>
             <div class="explorer-header-actions" style="display: flex; gap: 0.4rem; align-items: center;">
               <select id="explorer-root-select" class="form-control"
                 style="background:#111827; color:#f3f4f6; border:1px solid #374151; border-radius:6px; padding:0.35rem 0.5rem; font-size:0.8rem; max-width: 170px;">
-                <option value="">Izberi mapo...</option>
+                <option value="">Select folder...</option>
               </select>
               <button type="button" class="btn btn-secondary btn-sm" id="explorer-refresh-btn"
-                title="Osveži mapo">🔄</button>
+                title="Refresh folder">🔄</button>
             </div>
           </div>
 
@@ -177,10 +177,10 @@
             <div class="explorer-toolbar"
               style="margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
               <div style="position: relative; flex: 1;">
-                <input type="text" id="explorer-search-input" placeholder="🔍 Filtriraj datoteke..."
+                <input type="text" id="explorer-search-input" placeholder="🔍 Filter files..."
                   style="width: 100%; background: #111827; border: 1px solid #374151; border-radius: 6px; padding: 0.35rem 0.6rem; color: #f3f4f6; font-size: 0.825rem;" />
               </div>
-              <div id="explorer-item-count" style="font-size: 0.8rem; color: #9ca3af; white-space: nowrap;">Nalaganje...</div>
+              <div id="explorer-item-count" style="font-size: 0.8rem; color: #9ca3af; white-space: nowrap;">Loading...</div>
             </div>
 
             <!-- File Table View -->
@@ -191,15 +191,15 @@
                 <thead>
                   <tr
                     style="background: #141a29; color: #94a3b8; border-bottom: 1px solid #262c3b; position: sticky; top: 0; z-index: 10;">
-                    <th style="padding: 0.5rem 0.7rem;">Ime</th>
-                    <th style="padding: 0.5rem 0.7rem; width: 75px;">Vrsta</th>
-                    <th style="padding: 0.5rem 0.7rem; width: 85px;">Velikost</th>
-                    <th style="padding: 0.5rem 0.7rem; width: 110px; text-align: right;">Dejanja</th>
+                    <th style="padding: 0.5rem 0.7rem;">Name</th>
+                    <th style="padding: 0.5rem 0.7rem; width: 75px;">Type</th>
+                    <th style="padding: 0.5rem 0.7rem; width: 85px;">Size</th>
+                    <th style="padding: 0.5rem 0.7rem; width: 110px; text-align: right;">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="explorer-table-body">
                   <tr>
-                    <td colspan="4" style="padding: 1.5rem; text-align: center; color: #64748b;">Izberite mapo za raziskovanje.</td>
+                    <td colspan="4" style="padding: 1.5rem; text-align: center; color: #64748b;">Select a folder to explore.</td>
                   </tr>
                 </tbody>
               </table>
@@ -214,8 +214,8 @@
       <div class="modal-content">
         <div class="modal-header">
           <div>
-            <h3 id="job-modal-title">⚙️ Uredi opravilo sinhronizacije</h3>
-            <span class="subtitle">Določite ciljno mapo, urnik ter filtre za YuStream katalog.</span>
+            <h3 id="job-modal-title">⚙️ Edit Sync Job</h3>
+            <span class="subtitle">Configure target directory, schedule, and filters for YuStream catalog.</span>
           </div>
           <button type="button" class="modal-close-btn" id="job-modal-close-btn">&times;</button>
         </div>
@@ -226,69 +226,69 @@
 
             <div class="form-row">
               <div class="form-group" style="grid-column: span 2;">
-                <label for="job-name">Ime opravila</label>
+                <label for="job-name">Job Name</label>
                 <input type="text" id="job-name" name="name" required
-                  placeholder="npr. 🎬 Filmi 24h ali 📺 Serije" />
+                  placeholder="e.g. 🎬 Movies 24h or 📺 Series" />
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
-                <label for="job-target-dir">Ciljna mapa (Target Directory)</label>
+                <label for="job-target-dir">Target Directory</label>
                 <input type="text" id="job-target-dir" name="targetDir" required
-                  placeholder="npr. /media/MoviesYuStream ali /media/ShowsYuStream" />
+                  placeholder="e.g. /media/MoviesYuStream or /media/ShowsYuStream" />
               </div>
               <div class="form-group">
-                <label for="job-schedule">Urnik samodejne sinhronizacije</label>
+                <label for="job-schedule">Automatic Sync Schedule</label>
                 <select id="job-schedule" name="schedule">
-                  <option value="disabled">Onemogočeno (samo ročni zagon)</option>
-                  <option value="every_1h">Vsako 1 uro</option>
-                  <option value="every_2h">Vsaki 2 uri</option>
-                  <option value="every_4h">Vsake 4 ure</option>
-                  <option value="every_6h">Vsakih 6 ur</option>
-                  <option value="every_8h">Vsakih 8 ur</option>
-                  <option value="every_12h">Vsakih 12 ur</option>
-                  <option value="every_24h">Vsakih 24 ur (dnevno)</option>
+                  <option value="disabled">Disabled (Manual only)</option>
+                  <option value="every_1h">Every 1 hour</option>
+                  <option value="every_2h">Every 2 hours</option>
+                  <option value="every_4h">Every 4 hours</option>
+                  <option value="every_6h">Every 6 hours</option>
+                  <option value="every_8h">Every 8 hours</option>
+                  <option value="every_12h">Every 12 hours</option>
+                  <option value="every_24h">Every 24 hours (Daily)</option>
                 </select>
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
-                <label for="job-media-type">Vsebina</label>
+                <label for="job-media-type">Content Type</label>
                 <select id="job-media-type" name="mediaTypeFilter">
-                  <option value="all">Vse (Filmi & TV Serije)</option>
-                  <option value="movies">Samo Filmi</option>
-                  <option value="shows">Samo TV Serije</option>
+                  <option value="all">All (Movies & TV Shows)</option>
+                  <option value="movies">Movies Only</option>
+                  <option value="shows">TV Shows Only</option>
                 </select>
               </div>
               <div class="form-group">
-                <label for="job-item-limit">Omejitev števila (0 = Vse)</label>
-                <input type="number" id="job-item-limit" name="itemLimit" min="0" max="5000" placeholder="0 (Vse)" />
+                <label for="job-item-limit">Item Limit (0 = All)</label>
+                <input type="number" id="job-item-limit" name="itemLimit" min="0" max="5000" placeholder="0 (All)" />
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
-                <label for="job-min-year">Najmanjše leto izida</label>
+                <label for="job-min-year">Minimum Release Year</label>
                 <input type="number" id="job-min-year" name="minYear" min="1900" max="2030"
-                  placeholder="npr. 2015 (neobvezno)" />
+                  placeholder="e.g. 2015 (optional)" />
               </div>
               <div class="form-group">
-                <label for="job-min-rating">Najnižja ocena (0 - 10)</label>
+                <label for="job-min-rating">Minimum Rating (0 - 10)</label>
                 <input type="number" id="job-min-rating" name="minRating" min="0" max="10" step="0.5"
-                  placeholder="npr. 7.0 (neobvezno)" />
+                  placeholder="e.g. 7.0 (optional)" />
               </div>
             </div>
 
             <!-- Genre Checklist Filter -->
             <div class="form-group">
               <div class="genre-header-row">
-                <label>Filter po žanrih</label>
+                <label>Genre Filter</label>
                 <div class="genre-quick-actions">
-                  <button type="button" class="btn-text" id="genre-select-all">Izberi vse</button>
+                  <button type="button" class="btn-text" id="genre-select-all">Select All</button>
                   <span>•</span>
-                  <button type="button" class="btn-text" id="genre-clear-all">Počisti vse</button>
+                  <button type="button" class="btn-text" id="genre-clear-all">Clear All</button>
                 </div>
               </div>
               <div class="genre-grid" id="genre-checkbox-container">
@@ -298,9 +298,9 @@
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="job-modal-cancel-btn">Prekliči</button>
-            <button type="button" class="btn btn-info" id="job-preview-btn">🔍 Predogled zadetkov</button>
-            <button type="submit" class="btn btn-primary" id="job-save-btn">💾 Shrani opravilo</button>
+            <button type="button" class="btn btn-secondary" id="job-modal-cancel-btn">Cancel</button>
+            <button type="button" class="btn btn-info" id="job-preview-btn">🔍 Preview Matching Items</button>
+            <button type="submit" class="btn btn-primary" id="job-save-btn">💾 Save Job</button>
           </div>
         </form>
       </div>
@@ -311,8 +311,8 @@
       <div class="modal-content" style="max-width: 1000px; width: 95%;">
         <div class="modal-header">
           <div>
-            <h3 id="preview-title">🔍 Predogled sinhronizacije</h3>
-            <span class="subtitle" id="preview-subtitle">Iskanje zadetkov v katalogu YuStream...</span>
+            <h3 id="preview-title">🔍 Sync Preview</h3>
+            <span class="subtitle" id="preview-subtitle">Searching matching items in YuStream catalog...</span>
           </div>
           <button type="button" class="modal-close-btn" id="preview-close-btn">&times;</button>
         </div>
@@ -322,13 +322,13 @@
           <div class="preview-toolbar"
             style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
             <div style="position: relative; flex: 1; min-width: 250px;">
-              <input type="text" id="preview-search-input" placeholder="🔍 Išči po naslovu ali žanru..."
+              <input type="text" id="preview-search-input" placeholder="🔍 Search by title or genre..."
                 style="width: 100%; background: #111827; border: 1px solid #374151; border-radius: 6px; padding: 0.45rem 0.75rem; color: #f3f4f6; font-size: 0.85rem;" />
             </div>
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <button type="button" class="btn btn-outline btn-sm" id="preview-select-all-btn">Izberi vse</button>
-              <button type="button" class="btn btn-outline btn-sm" id="preview-deselect-all-btn">Odstrani izbiro</button>
-              <span id="preview-selected-count" style="font-size: 0.85rem; font-weight: 600; color: #38bdf8;">0 izbranih</span>
+              <button type="button" class="btn btn-outline btn-sm" id="preview-select-all-btn">Select All</button>
+              <button type="button" class="btn btn-outline btn-sm" id="preview-deselect-all-btn">Deselect All</button>
+              <span id="preview-selected-count" style="font-size: 0.85rem; font-weight: 600; color: #38bdf8;">0 selected</span>
             </div>
           </div>
 
@@ -337,20 +337,20 @@
               <thead>
                 <tr>
                   <th style="width: 40px; text-align: center;">
-                    <input type="checkbox" id="preview-master-checkbox" title="Izberi vse" />
+                    <input type="checkbox" id="preview-master-checkbox" title="Select All" />
                   </th>
-                  <th style="width: 70px;">Vrsta</th>
+                  <th style="width: 70px;">Type</th>
                   <th id="th-sort-title" class="sortable-th" style="cursor: pointer;">
-                    Naslov <span class="sort-indicator" id="sort-icon-title">↕️</span>
+                    Title <span class="sort-indicator" id="sort-icon-title">↕️</span>
                   </th>
                   <th id="th-sort-year" class="sortable-th" style="cursor: pointer; width: 85px;">
-                    Leto <span class="sort-indicator" id="sort-icon-year">↕️</span>
+                    Year <span class="sort-indicator" id="sort-icon-year">↕️</span>
                   </th>
                   <th id="th-sort-rating" class="sortable-th" style="cursor: pointer; width: 85px;">
-                    Ocena <span class="sort-indicator" id="sort-icon-rating">↕️</span>
+                    Rating <span class="sort-indicator" id="sort-icon-rating">↕️</span>
                   </th>
-                  <th>Žanri</th>
-                  <th>Ciljna .strm datoteka</th>
+                  <th>Genres</th>
+                  <th>Target .strm File</th>
                 </tr>
               </thead>
               <tbody id="preview-items-body">
@@ -362,10 +362,10 @@
         <div class="modal-footer" style="justify-content: space-between;">
           <div>
             <button type="button" class="btn btn-success" id="preview-sync-selected-btn" disabled>
-              ▶️ Sinhroniziraj samo izbrane (<span id="preview-sync-btn-count">0</span>)
+              ▶️ Sync Selected Only (<span id="preview-sync-btn-count">0</span>)
             </button>
           </div>
-          <button type="button" class="btn btn-secondary" id="preview-cancel-btn">Zapri</button>
+          <button type="button" class="btn btn-secondary" id="preview-cancel-btn">Close</button>
         </div>
       </div>
     </div>
@@ -375,7 +375,7 @@
       <div class="modal-content" style="max-width: 800px;">
         <div class="modal-header">
           <div>
-            <h3 id="file-editor-title">📝 Urejevalnik datotek</h3>
+            <h3 id="file-editor-title">📝 File Editor</h3>
             <span class="subtitle" id="file-editor-path">/path/to/file</span>
           </div>
           <button type="button" class="modal-close-btn" id="file-editor-close-btn">&times;</button>
@@ -392,8 +392,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="file-editor-cancel-btn">Zapri</button>
-          <button type="button" class="btn btn-primary" id="file-editor-save-btn">💾 Shrani spremembe</button>
+          <button type="button" class="btn btn-secondary" id="file-editor-cancel-btn">Close</button>
+          <button type="button" class="btn btn-primary" id="file-editor-save-btn">💾 Save Changes</button>
         </div>
       </div>
     </div>
@@ -403,16 +403,16 @@
       <div class="modal-content" style="max-width: 900px; width: 95%;">
         <div class="modal-header">
           <div>
-            <h3>📜 Dnevnik sinhronizacije (Sync Logs)</h3>
-            <span class="subtitle">Izpis delovanja in prenosov podatkov v živo</span>
+            <h3>📜 Sync Logs</h3>
+            <span class="subtitle">Live output and synchronization progress</span>
           </div>
           <button type="button" class="modal-close-btn" id="sync-logs-close-btn">&times;</button>
         </div>
         <div class="modal-body" style="padding: 0;">
-          <pre class="terminal-output" id="log-output" style="max-height: 480px; margin: 0; border-radius: 0 0 6px 6px;">Sistem je pripravljen.</pre>
+          <pre class="terminal-output" id="log-output" style="max-height: 480px; margin: 0; border-radius: 0 0 6px 6px;">System is ready.</pre>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="sync-logs-cancel-btn">Zapri</button>
+          <button type="button" class="btn btn-secondary" id="sync-logs-cancel-btn">Close</button>
         </div>
       </div>
     </div>
@@ -422,16 +422,16 @@
       <div class="modal-content" style="max-width: 900px; width: 95%;">
         <div class="modal-header">
           <div>
-            <h3>⚡ Dnevnik pretočnega mostu (Bridge Logs)</h3>
-            <span class="subtitle">Zahtevki za predvajanje in posredovanje video tokov v Jellyfin</span>
+            <h3>⚡ Bridge Logs</h3>
+            <span class="subtitle">Playback requests and stream forwarding to Jellyfin</span>
           </div>
           <button type="button" class="modal-close-btn" id="bridge-logs-close-btn">&times;</button>
         </div>
         <div class="modal-body" style="padding: 0;">
-          <pre class="terminal-output" id="bridge-log-output" style="max-height: 480px; margin: 0; color: #60a5fa; border-radius: 0 0 6px 6px;">Pretočni most pripravljen. Čakam na zahteve za predvajanje iz Jellyfina...</pre>
+          <pre class="terminal-output" id="bridge-log-output" style="max-height: 480px; margin: 0; color: #60a5fa; border-radius: 0 0 6px 6px;">Stream bridge ready. Waiting for playback requests from Jellyfin...</pre>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="bridge-logs-cancel-btn">Zapri</button>
+          <button type="button" class="btn btn-secondary" id="bridge-logs-cancel-btn">Close</button>
         </div>
       </div>
     </div>
@@ -441,8 +441,8 @@
       <div class="modal-content" style="max-width: 900px; width: 95%;">
         <div class="modal-header">
           <div>
-            <h3>📅 Zgodovina izvajanja</h3>
-            <span class="subtitle">Evidenca zaključenih sinhronizacij</span>
+            <h3>📅 Execution History</h3>
+            <span class="subtitle">Log of completed sync runs</span>
           </div>
           <button type="button" class="modal-close-btn" id="history-close-btn">&times;</button>
         </div>
@@ -452,7 +452,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="history-cancel-btn">Zapri</button>
+          <button type="button" class="btn btn-secondary" id="history-cancel-btn">Close</button>
         </div>
       </div>
     </div>

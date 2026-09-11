@@ -133,23 +133,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (statSyncStatus) {
       if (isSyncing) {
-        statSyncStatus.textContent = '⚡ Sinhronizacija teče';
+        statSyncStatus.textContent = '⚡ Syncing in progress';
         statSyncStatus.style.color = '#38bdf8';
       } else {
-        statSyncStatus.textContent = 'Pripravljen';
+        statSyncStatus.textContent = 'Ready';
         statSyncStatus.style.color = '#34d399';
       }
     }
 
     if (statJellyfinStatus && globalConfig) {
       if (globalConfig.jellyfinAutoRefresh && globalConfig.jellyfinUrl) {
-        statJellyfinStatus.textContent = '✅ Povezan & Auto';
+        statJellyfinStatus.textContent = '✅ Connected & Auto';
         statJellyfinStatus.style.color = '#34d399';
       } else if (globalConfig.jellyfinUrl) {
-        statJellyfinStatus.textContent = '🔗 Nastavljen';
+        statJellyfinStatus.textContent = '🔗 Configured';
         statJellyfinStatus.style.color = '#93c5fd';
       } else {
-        statJellyfinStatus.textContent = 'Ni nastavljen';
+        statJellyfinStatus.textContent = 'Not configured';
         statJellyfinStatus.style.color = '#9ca3af';
       }
     }
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
           : '<span class="job-pill job-pill-disabled">PAUSED</span>');
 
       const schedLabel = SCHEDULE_LABELS[job.schedule] || job.schedule || 'Disabled';
-      const sortLabel = SORT_LABELS[job.sortBy] || 'Nazadnje dodano';
+      const sortLabel = SORT_LABELS[job.sortBy] || 'Recently Added';
       const scopeLabel = job.mediaTypeFilter === 'movies' ? '🎬 Movies Only' : (job.mediaTypeFilter === 'shows' ? '📺 TV Shows Only' : '🎬 & 📺 Both');
 
       return `
@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Open Create Job Modal
   createJobBtn.addEventListener('click', () => {
-    jobModalTitle.textContent = '➕ Novo opravilo sinhronizacije';
+    jobModalTitle.textContent = '➕ New Sync Job';
     document.getElementById('job-id').value = '';
     document.getElementById('job-name').value = '';
     document.getElementById('job-target-dir').value = '/media/MoviesYuStream';
@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const job = allJobs.find(j => j.id === jobId);
     if (!job) return;
 
-    jobModalTitle.textContent = `⚙️ Uredi opravilo: ${job.name}`;
+    jobModalTitle.textContent = `⚙️ Edit Job: ${job.name}`;
     document.getElementById('job-id').value = job.id;
     document.getElementById('job-name').value = job.name || '';
     document.getElementById('job-target-dir').value = job.targetDir || '';
@@ -506,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Test YuStream Authentication
   testAuthBtn?.addEventListener('click', async () => {
     testAuthBtn.disabled = true;
-    testAuthBtn.textContent = 'Preverjam...';
+    testAuthBtn.textContent = 'Verifying...';
     try {
       const res = await fetch('/api/auth/test', {
         method: 'POST',
@@ -518,15 +518,15 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       const data = await res.json();
       if (data.success) {
-        showToast('✅ Prijava na YuStream uspešna!', 'success');
+        showToast('✅ YuStream login successful!', 'success');
       } else {
-        showToast(`⚠️ Prijava ni uspela: ${data.message || 'Napačni podatki'}`, 'error');
+        showToast(`⚠️ Login failed: ${data.message || 'Invalid credentials'}`, 'error');
       }
     } catch (err) {
-      showToast(`Napaka povezave: ${err.message}`, 'error');
+      showToast(`Connection error: ${err.message}`, 'error');
     } finally {
       testAuthBtn.disabled = false;
-      testAuthBtn.textContent = '🔐 Testiraj YuStream prijavo';
+      testAuthBtn.textContent = '🔐 Test YuStream Login';
     }
   });
 
@@ -1043,7 +1043,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updatePreviewSelectionCounters() {
     const count = selectedPreviewIds.size;
-    if (previewSelectedCount) previewSelectedCount.textContent = `${count} izbranih`;
+    if (previewSelectedCount) previewSelectedCount.textContent = `${count} selected`;
     if (previewSyncBtnCount) previewSyncBtnCount.textContent = count;
     if (previewSyncSelectedBtn) previewSyncSelectedBtn.disabled = count === 0;
 
@@ -1199,7 +1199,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       previewModal.style.display = 'flex';
       previewTitle.textContent = '🔍 Sync Preview';
-      previewSubtitle.textContent = 'Calculating matching items from SloFlix...';
+      previewSubtitle.textContent = 'Calculating matching items from YuStream...';
       previewSummaryTags.innerHTML = '';
       previewItemsBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 2rem;">⏳ Fetching catalog...</td></tr>';
       
@@ -1224,28 +1224,28 @@ document.addEventListener('DOMContentLoaded', () => {
           genres: Array.isArray(item.genres) ? item.genres.join(', ') : (item.genres || ''),
           targetFolder: item.targetFile || ''
         }));
-        previewTitle.textContent = `🔍 Predogled (${data.moviesFound + data.showsFound} zadetkov)`;
-        previewSubtitle.textContent = `Najdeno: ${data.moviesFound} filmov in ${data.showsFound} serij po izbranih filtrih:`;
+        previewTitle.textContent = `🔍 Preview (${data.moviesFound + data.showsFound} results)`;
+        previewSubtitle.textContent = `Found: ${data.moviesFound} movies and ${data.showsFound} series matching filters:`;
 
         const isAllGenres = !selectedGenres || selectedGenres.length === 0 || selectedGenres.length === ALL_GENRES.length;
         previewSummaryTags.innerHTML = `
-          <span class="filter-badge">🎬 Filmi: ${data.moviesFound}</span>
-          <span class="filter-badge">📺 Serije: ${data.showsFound}</span>
-          <span class="filter-badge">🏷️ Žanri: ${isAllGenres ? 'Vsi' : selectedGenres.join(', ')}</span>
-          ${payload.minYear ? `<span class="filter-badge">📅 Min leto: ≥ ${payload.minYear}</span>` : ''}
-          ${payload.minRating ? `<span class="filter-badge">⭐ Min ocena: ≥ ${payload.minRating}</span>` : ''}
-          ${payload.itemLimit ? `<span class="filter-badge">🔢 Omejitev: ${payload.itemLimit}</span>` : '<span class="filter-badge">🔢 Omejitev: Vse</span>'}
+          <span class="filter-badge">🎬 Movies: ${data.moviesFound}</span>
+          <span class="filter-badge">📺 Series: ${data.showsFound}</span>
+          <span class="filter-badge">🏷️ Genres: ${isAllGenres ? 'All' : selectedGenres.join(', ')}</span>
+          ${payload.minYear ? `<span class="filter-badge">📅 Min Year: ≥ ${payload.minYear}</span>` : ''}
+          ${payload.minRating ? `<span class="filter-badge">⭐ Min Rating: ≥ ${payload.minRating}</span>` : ''}
+          ${payload.itemLimit ? `<span class="filter-badge">🔢 Limit: ${payload.itemLimit}</span>` : '<span class="filter-badge">🔢 Limit: All</span>'}
         `;
 
         renderPreviewTable();
       } else {
-        previewItemsBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: #ef4444; padding: 2rem;">Napaka: ${data.message}</td></tr>`;
+        previewItemsBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: #ef4444; padding: 2rem;">Error: ${data.message}</td></tr>`;
       }
     } catch (err) {
-      previewItemsBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: #ef4444; padding: 2rem;">Napaka: ${err.message}</td></tr>`;
+      previewItemsBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: #ef4444; padding: 2rem;">Error: ${err.message}</td></tr>`;
     } finally {
       jobPreviewBtn.disabled = false;
-      jobPreviewBtn.textContent = '🔍 Predogled zadetkov';
+      jobPreviewBtn.textContent = '🔍 Preview Matching Items';
     }
   });
 
