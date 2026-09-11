@@ -1018,9 +1018,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const thSortRating = document.getElementById('th-sort-rating');
 
   function updatePreviewSortIcons() {
-    document.getElementById('sort-icon-title').textContent = previewSortColumn === 'title' ? (previewSortOrder === 'asc' ? '▲' : '▼') : '↕️';
-    document.getElementById('sort-icon-year').textContent = previewSortColumn === 'year' ? (previewSortOrder === 'asc' ? '▲' : '▼') : '↕️';
-    document.getElementById('sort-icon-rating').textContent = previewSortColumn === 'rating' ? (previewSortOrder === 'asc' ? '▲' : '▼') : '↕️';
+    const iconTitle = document.getElementById('sort-icon-title');
+    const iconYear = document.getElementById('sort-icon-year');
+    const iconRating = document.getElementById('sort-icon-rating');
+    if (iconTitle) iconTitle.textContent = previewSortColumn === 'title' ? (previewSortOrder === 'asc' ? '▲' : '▼') : '↕️';
+    if (iconYear) iconYear.textContent = previewSortColumn === 'year' ? (previewSortOrder === 'asc' ? '▲' : '▼') : '↕️';
+    if (iconRating) iconRating.textContent = previewSortColumn === 'rating' ? (previewSortOrder === 'asc' ? '▲' : '▼') : '↕️';
   }
 
   function handlePreviewSort(column) {
@@ -1109,8 +1112,10 @@ document.addEventListener('DOMContentLoaded', () => {
         valA = parseFloat(a.rating || '0') || 0;
         valB = parseFloat(b.rating || '0') || 0;
       } else {
-        valA = (a.titleSlo || a.titleEn || '').toLowerCase();
-        valB = (b.titleSlo || b.titleEn || '').toLowerCase();
+        const strA = (a.titleSlo || a.titleEn || '').trim();
+        const strB = (b.titleSlo || b.titleEn || '').trim();
+        const cmp = strA.localeCompare(strB, 'sl', { sensitivity: 'base', numeric: true });
+        return previewSortOrder === 'asc' ? cmp : -cmp;
       }
 
       if (valA < valB) return previewSortOrder === 'asc' ? -1 : 1;
