@@ -527,7 +527,7 @@ export class YuStreamClient {
       if (seasonsList.length > 0) {
         for (const s of seasonsList) {
           try {
-            const res = await fetch(`${this.baseUrl}/wp-json/streamit/api/v1/tv-shows/${showId}/seasons/${s.id}`, {
+            const res = await fetch(`${this.baseUrl}/wp-json/streamit/api/v1/tv-shows/${showId}/seasons/${s.id}?posts_per_page=-1`, {
               headers: this.getAuthHeaders()
             });
             if (res.ok) {
