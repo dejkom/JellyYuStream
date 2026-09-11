@@ -1,0 +1,29 @@
+services:
+  jellyyustream:
+    container_name: jellyyustream
+    image: jellyyustream:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3850:3850"
+    environment:
+      - PORT=3850
+      - CONFIG_PATH=/config/config.json
+      - MOVIES_DIR=/media/MoviesYuStream
+      - SHOWS_DIR=/media/ShowsYuStream
+      - BRIDGE_URL=http://jellyyustream:3850
+      - YUSTREAM_USERNAME=${YUSTREAM_USERNAME:-}
+      - YUSTREAM_PASSWORD=${YUSTREAM_PASSWORD:-}
+    volumes:
+      # Persistent config storage
+      - /DATA/AppData/jellyyustream/config:/config
+      # Same host media path as Jellyfin
+      - /DATA/Media:/media
+    networks:
+      - deanNetwork
+
+networks:
+  deanNetwork:
+    external: true

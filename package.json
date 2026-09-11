@@ -1,0 +1,17 @@
+{
+  "name": "jellyyustream",
+  "version": "1.0.0",
+  "description": "YuStream catalog sync to Jellyfin .strm directory structure and streaming bridge",
+  "main": "sync.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "server": "node server.js",
+    "sync": "node sync.js",
+    "sync:force": "node sync.js --force",
+    "sync:dry": "node sync.js --dry-run"
+  },
+  "keywords": ["jellyfin", "yustream", "strm", "sync", "stream"],
+  "author": "",
+  "license": "MIT"
+}
