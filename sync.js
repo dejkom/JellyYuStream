@@ -28,7 +28,7 @@ export const CONFIG = {
     'Accept': 'application/json, text/plain, */*'
   },
   timeoutMs: 20000,
-  pageSize: 100
+  directStreamUrls: false
 };
 
 // ==========================================
@@ -45,6 +45,7 @@ function parseArgs() {
     help: false,
     apiUrl: CONFIG.apiBaseUrl,
     bridgeUrl: CONFIG.bridgeUrl,
+    directStreamUrls: false,
     limit: null,
     mediaTypeFilter: 'all', // 'all', 'movies', 'shows'
     selectedGenres: [],
@@ -96,6 +97,8 @@ function parseArgs() {
       if (args[i + 1] && !args[i + 1].startsWith('-')) {
         options.password = args[++i];
       }
+    } else if (arg === '--direct-stream-urls' || arg === '--direct') {
+      options.directStreamUrls = true;
     }
   }
 
@@ -665,7 +668,24 @@ export class SyncEngine {
     const targetFile = path.join(targetDir, fileName);
 
     const mediaId = movie.id;
-    const streamContent = `${this.options.bridgeUrl}/play/${mediaId}`;
+    let streamContent = `${this.options.bridgeUrl}/play/${mediaId}`;
+
+    let detail = null;
+    if (this.options.directStreamUrls || !this.options.dryRun) {
+      try {
+        detail = await this.client.getMovieDetails(mediaId);
+        if (this.options.directStreamUrls && detail) {
+          const directUrl = detail.movie_file || detail.url_link || detail.sources?.[0]?.source_url;
+          if (directUrl) {
+            streamContent = directUrl;
+          }
+        }
+      } catch (err) {
+        if (this.options.directStreamUrls) {
+          this.log(`     ⚠️ [Direct URL] Could not resolve direct stream URL for movie ${mediaId}: ${err.message}`);
+        }
+      }
+    }
 
     const res = this.writeStrmFile(targetFile, streamContent);
 
@@ -677,12 +697,14 @@ export class SyncEngine {
         year: year,
         target: `${folderName}/${fileName}`
       });
-      this.log(`  ➕ [Movie] [${res.dryRun ? 'DRY-RUN' : 'CREATED'}] ${folderName}/${fileName}`);
+      this.log(`  ➕ [Movie] [${res.dryRun ? 'DRY-RUN' : 'CREATED'}] ${folderName}/${fileName}${this.options.directStreamUrls && streamContent.startsWith('http') && !streamContent.includes('/play/') ? ' ⚡(DIRECT)' : ''}`);
 
       // Detailed metadata & Artwork if not dry-run
       if (!this.options.dryRun) {
         try {
-          const detail = await this.client.getMovieDetails(mediaId);
+          if (!detail) {
+            detail = await this.client.getMovieDetails(mediaId);
+          }
           const nfoContent = generateMovieNfo(detail || movie, title);
           const nfoPath = path.join(targetDir, 'movie.nfo');
           if (!fs.existsSync(nfoPath) || this.options.force) {
@@ -764,7 +786,22 @@ export class SyncEngine {
         const targetDir = path.join(this.showsBaseDir, showFolderName, seasonFolderName);
         const targetFile = path.join(targetDir, epFileName);
 
-        const streamContent = `${this.options.bridgeUrl}/play/${ep.id}`;
+        let streamContent = `${this.options.bridgeUrl}/play/${ep.id}`;
+        let isDirect = false;
+
+        if (this.options.directStreamUrls) {
+          try {
+            const epDetail = await this.client.getEpisodeDetails(ep.id);
+            const directUrl = epDetail?.data?.episode_file || epDetail?.episode_file || epDetail?.data?.url_link || epDetail?.url_link;
+            if (directUrl) {
+              streamContent = directUrl;
+              isDirect = true;
+            }
+          } catch (err) {
+            this.log(`     ⚠️ [Direct URL] Could not resolve direct stream URL for episode ${ep.id}: ${err.message}`);
+          }
+        }
+
         const res = this.writeStrmFile(targetFile, streamContent);
 
         if (res.status === 'created') {
@@ -775,7 +812,7 @@ export class SyncEngine {
             year: year,
             target: `${showFolderName}/${seasonFolderName}/${epFileName}`
           });
-          this.log(`  ➕ [Episode] [${res.dryRun ? 'DRY-RUN' : 'CREATED'}] ${showFolderName}/${seasonFolderName}/${epFileName}`);
+          this.log(`  ➕ [Episode] [${res.dryRun ? 'DRY-RUN' : 'CREATED'}] ${showFolderName}/${seasonFolderName}/${epFileName}${isDirect ? ' ⚡(DIRECT)' : ''}`);
         } else {
           this.stats.episodesSkipped++;
           this.log(`  ⏭️  [Episode] [SKIPPED] ${showFolderName}/${seasonFolderName}/${epFileName}`);

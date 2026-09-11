@@ -44,6 +44,7 @@ export class YuStreamBridgeServer {
       username: process.env.YUSTREAM_USERNAME || '',
       password: process.env.YUSTREAM_PASSWORD || '',
       bridgeUrl: process.env.BRIDGE_URL || `http://localhost:${defaultPort}`,
+      directStreamUrls: process.env.DIRECT_STREAM_URLS === 'true' || false,
       languagePreference: 'original',
       jellyfinUrl: process.env.JELLYFIN_URL || '',
       jellyfinApiKey: process.env.JELLYFIN_API_KEY || '',
@@ -480,8 +481,6 @@ export class YuStreamBridgeServer {
 
       forwardHeaders['Access-Control-Allow-Origin'] = '*';
       forwardHeaders['Access-Control-Allow-Headers'] = '*';
-      forwardHeaders['Accept-Ranges'] = 'bytes';
-
       clientRes.writeHead(upstreamRes.statusCode, forwardHeaders);
 
       if (clientReq.method === 'HEAD') {
@@ -496,6 +495,11 @@ export class YuStreamBridgeServer {
       upstreamRes.on('error', (err) => {
         this.appendBridgeLog(`Upstream stream error: ${err.message}`);
         resolve();
+      });
+
+      clientReq.on('close', () => {
+        upstreamReq.destroy();
+        upstreamRes.destroy();
       });
     });
 
@@ -545,6 +549,7 @@ export class YuStreamBridgeServer {
       const engine = new SyncEngine({
         apiUrl: this.config.apiUrl,
         bridgeUrl: this.config.bridgeUrl,
+        directStreamUrls: !!this.config.directStreamUrls,
         outputDir: targetDir,
         moviesDir: moviesDir,
         showsDir: showsDir,
@@ -793,6 +798,7 @@ export class YuStreamBridgeServer {
               this.config.username = updated.username ?? this.config.username;
               this.config.password = updated.password ?? this.config.password;
               this.config.bridgeUrl = updated.bridgeUrl ?? this.config.bridgeUrl;
+              this.config.directStreamUrls = updated.directStreamUrls !== undefined ? !!updated.directStreamUrls : !!this.config.directStreamUrls;
               this.config.port = updated.port ?? this.config.port;
               this.config.languagePreference = updated.languagePreference ?? this.config.languagePreference;
               this.config.jellyfinUrl = updated.jellyfinUrl !== undefined ? updated.jellyfinUrl : this.config.jellyfinUrl;

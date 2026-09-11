@@ -57,12 +57,26 @@
               <div class="form-group">
                 <label for="bridgeUrl">Bridge URL v .strm datotekah</label>
                 <input type="text" id="bridgeUrl" name="bridgeUrl" required
-                  placeholder="http://localhost:3849 ali http://192.168.1.100:3849" />
+                  placeholder="http://localhost:3850 ali http://192.168.1.100:3850" />
               </div>
               <div class="form-group">
                 <label for="port">Vrata (Port)</label>
-                <input type="number" id="port" name="port" required value="3849" />
+                <input type="number" id="port" name="port" required value="3850" />
               </div>
+            </div>
+
+            <!-- Direct Stream URLs Option -->
+            <div style="margin-top: 1rem; padding: 0.85rem 1rem; background: rgba(56, 189, 248, 0.05); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px;">
+              <label style="display: flex; align-items: flex-start; gap: 0.6rem; cursor: pointer;">
+                <input type="checkbox" id="directStreamUrls" name="directStreamUrls" style="margin-top: 0.25rem;" />
+                <div>
+                  <div style="font-weight: 600; color: #38bdf8;">⚡ Direct YuStream URLs in .strm files</div>
+                  <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">
+                    V .strm datoteke shrani neposredne povezave do video datotek (yustream.org) namesto internega proxy/bridge URL-ja.
+                    Omogoča nemoteno predvajanje na telefonih/tablicah zunaj lokalnega omrežja brez odpiranja portov na routerju.
+                  </div>
+                </div>
+              </label>
             </div>
 
             <!-- Jellyfin Auto-Refresh Integration Sub-section -->

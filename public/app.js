@@ -224,8 +224,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       document.getElementById('username').value = globalConfig.username || '';
       document.getElementById('password').value = globalConfig.password || '';
-      document.getElementById('bridgeUrl').value = globalConfig.bridgeUrl || 'http://localhost:3849';
-      document.getElementById('port').value = globalConfig.port || 3849;
+      document.getElementById('bridgeUrl').value = globalConfig.bridgeUrl || 'http://localhost:3850';
+      document.getElementById('port').value = globalConfig.port || 3850;
+      const directCb = document.getElementById('directStreamUrls');
+      if (directCb) directCb.checked = !!globalConfig.directStreamUrls;
       
       document.getElementById('jellyfinUrl').value = globalConfig.jellyfinUrl || '';
       document.getElementById('jellyfinApiKey').value = globalConfig.jellyfinApiKey || '';
@@ -477,6 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
       username: document.getElementById('username').value,
       password: document.getElementById('password').value,
       bridgeUrl: document.getElementById('bridgeUrl').value,
+      directStreamUrls: !!document.getElementById('directStreamUrls')?.checked,
       port: parseInt(document.getElementById('port').value, 10),
       jellyfinUrl: document.getElementById('jellyfinUrl').value.trim(),
       jellyfinApiKey: document.getElementById('jellyfinApiKey').value.trim(),
