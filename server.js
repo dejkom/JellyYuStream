@@ -16,7 +16,7 @@ export class YuStreamBridgeServer {
   constructor(options = {}) {
     this.loadConfig();
     this.loadHistory();
-    this.port = options.port || this.config.port || 3850;
+    this.port = parseInt(options.port || process.env.PORT || this.config.port || 3850, 10);
     this.token = null;
     this.cookies = '';
     this.server = null;
@@ -37,12 +37,13 @@ export class YuStreamBridgeServer {
   }
 
   loadConfig() {
+    const defaultPort = parseInt(process.env.PORT || '3850', 10);
     const defaults = {
       apiUrl: 'https://yustream.org',
-      port: 3849,
+      port: defaultPort,
       username: process.env.YUSTREAM_USERNAME || '',
       password: process.env.YUSTREAM_PASSWORD || '',
-      bridgeUrl: process.env.BRIDGE_URL || 'http://localhost:3849',
+      bridgeUrl: process.env.BRIDGE_URL || `http://localhost:${defaultPort}`,
       languagePreference: 'original',
       jellyfinUrl: process.env.JELLYFIN_URL || '',
       jellyfinApiKey: process.env.JELLYFIN_API_KEY || '',
